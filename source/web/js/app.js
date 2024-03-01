@@ -637,8 +637,8 @@ function renderNavBar() {
     //  {
     // 	nav += '<li class="nav-item"><a id="vocabularyLink" class="nav-link" href="#vocabulary">Vocabulary</a></li>';
     //  }
-    nav +=
-      '<li class="nav-item"><a id="tweaksLink" class="nav-link" href="#tweaks">Tweaks</a></li>';
+    // nav +=
+    //   '<li class="nav-item"><a id="tweaksLink" class="nav-link" href="#tweaks">Tweaks</a></li>';
   }
   document.getElementById("navBar").innerHTML = nav;
 }
