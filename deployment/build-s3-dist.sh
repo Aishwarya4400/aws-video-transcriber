@@ -258,11 +258,11 @@ echo "--------------------------------------------------------------------------
 cd $source_dir/lambda/getcaption
 zip -q -r9 $build_dist_dir/lambda/GetCaption.zip *
 
-echo "------------------------------------------------------------------------------"
-echo "[Rebuild] gettweaks"
-echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/gettweaks
-zip -q -r9 $build_dist_dir/lambda/GetTweaks.zip *
+# echo "------------------------------------------------------------------------------"
+# echo "[Rebuild] gettweaks"
+# echo "------------------------------------------------------------------------------"
+# cd $source_dir/lambda/gettweaks
+# zip -q -r9 $build_dist_dir/lambda/GetTweaks.zip *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] getupload"
@@ -300,11 +300,11 @@ echo "--------------------------------------------------------------------------
 cd $source_dir/lambda/putcaption
 zip -q -r9 $build_dist_dir/lambda/PutCaption.zip *
 
-echo "------------------------------------------------------------------------------"
-echo "[Rebuild] puttweaks"
-echo "------------------------------------------------------------------------------"
-cd $source_dir/lambda/puttweaks
-zip -q -r9 $build_dist_dir/lambda/PutTweaks.zip *
+# echo "------------------------------------------------------------------------------"
+# echo "[Rebuild] puttweaks"
+# echo "------------------------------------------------------------------------------"
+# cd $source_dir/lambda/puttweaks
+# zip -q -r9 $build_dist_dir/lambda/PutTweaks.zip *
 
 echo "------------------------------------------------------------------------------"
 echo "[Rebuild] putvocabulary"
