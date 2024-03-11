@@ -118,17 +118,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: /aws/lambda/prod-aws-captions-putvocabulary
-      RetentionInDays: 7      
-  GetTweaksLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/lambda/prod-aws-captions-gettweaks
-      RetentionInDays: 7      
-  PutTweaksLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: /aws/lambda/prod-aws-captions-puttweaks
-      RetentionInDays: 7           
+      RetentionInDays: 7                 
   CustomResourceLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -1218,12 +1208,6 @@ Resources:
       ParentId: !GetAtt 'ApiGatewayRestApi.RootResourceId'
       PathPart: vocabulary
       RestApiId: !Ref 'ApiGatewayRestApi'
-  ApiGatewayResourceTweaks:
-    Type: AWS::ApiGateway::Resource
-    Properties:
-      ParentId: !GetAtt 'ApiGatewayRestApi.RootResourceId'
-      PathPart: tweaks
-      RestApiId: !Ref 'ApiGatewayRestApi'
   ApiGatewayResourceLanguage:
     Type: AWS::ApiGateway::Resource
     Properties:
@@ -1529,36 +1513,6 @@ Resources:
             ResponseTemplates:
               application/json: ''
       ResourceId: !Ref 'ApiGatewayResourceVocabulary'
-      RestApiId: !Ref 'ApiGatewayRestApi'
-  ApiGatewayMethodTweaksOptions:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      HttpMethod: OPTIONS
-      MethodResponses:
-        - StatusCode: '200'
-          ResponseParameters:
-            method.response.header.Access-Control-Allow-Origin: true
-            method.response.header.Access-Control-Allow-Headers: true
-            method.response.header.Access-Control-Allow-Methods: true
-            method.response.header.Access-Control-Allow-Credentials: true
-          ResponseModels: {}
-      RequestParameters: {}
-      Integration:
-        Type: MOCK
-        RequestTemplates:
-          application/json: '{statusCode:200}'
-        ContentHandling: CONVERT_TO_TEXT
-        IntegrationResponses:
-          - StatusCode: '200'
-            ResponseParameters:
-              method.response.header.Access-Control-Allow-Origin: '''*'''
-              method.response.header.Access-Control-Allow-Headers: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'''
-              method.response.header.Access-Control-Allow-Methods: '''OPTIONS,PUT,GET'''
-              method.response.header.Access-Control-Allow-Credentials: '''false'''
-            ResponseTemplates:
-              application/json: ''
-      ResourceId: !Ref 'ApiGatewayResourceTweaks'
       RestApiId: !Ref 'ApiGatewayRestApi'
   ApiGatewayMethodLanguageOptions:
     Type: AWS::ApiGateway::Method
@@ -2160,7 +2114,6 @@ Resources:
       - ApiGatewayMethodCaptionVideoidVarOptions
       - ApiGatewayMethodBurnedVideoVideoidVarOptions
       - ApiGatewayMethodVocabularyOptions
-      - ApiGatewayMethodTweaksOptions
       - ApiGatewayMethodBurnVideoidVarOptions
       - ApiGatewayMethodLanguageOptions
       - ApiGatewayMethodBatchStartOptions
@@ -2180,8 +2133,6 @@ Resources:
       - ApiGatewayMethodVocabularyGet
       - ApiGatewayMethodVocabularyHead
       - ApiGatewayMethodVocabularyPut
-      - ApiGatewayMethodTweaksGet
-      - ApiGatewayMethodTweaksPut
       - ApiGatewayMethodLanguagePut
       - ApiGatewayMethodBatchStartPOST
       - ApiGatewayMethodBatchCompletePOST
