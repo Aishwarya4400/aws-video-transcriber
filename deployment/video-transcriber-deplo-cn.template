@@ -780,58 +780,6 @@ Resources:
     Properties:
       FunctionName: !Ref 'PutVocabularyLambdaFunction'
       Description: Saves vocabulary to DynamoDB
-  GetTweaksLambdaFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Code:
-        S3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
-        S3Key: !Join ["/", [!FindInMap ["SourceCode", "General", "KeyPrefix"],  "lambda/GetTweaks.zip"]]
-      FunctionName: prod-aws-captions-gettweaks
-      Handler: lambda/gettweaks.handler
-      MemorySize: 128
-      Role: !GetAtt 'CommonRoleForLambda.Arn'
-      Runtime: nodejs20.x
-      Timeout: 29
-      Description: Loads tweaks from DynamoDB
-      Environment:
-        Variables:
-          DYNAMO_CONFIG_TABLE: !Ref 'ConfigDynamoDBTable'
-          REGION: !Ref 'AWS::Region'
-    DependsOn:
-      - GetTweaksLogGroup
-      - CommonRoleForLambda
-  GetTweaksLambdaVersion:
-    Type: AWS::Lambda::Version
-    DeletionPolicy: Retain
-    Properties:
-      FunctionName: !Ref 'GetTweaksLambdaFunction'
-      Description: Loads tweaks from DynamoDB
-  PutTweaksLambdaFunction:
-    Type: AWS::Lambda::Function
-    Properties:
-      Code:
-        S3Bucket: !Join ["-", [!FindInMap ["SourceCode", "General", "S3Bucket"], Ref: "AWS::Region"]]
-        S3Key: !Join ["/", [!FindInMap ["SourceCode", "General", "KeyPrefix"],  "lambda/PutTweaks.zip"]]
-      FunctionName: prod-aws-captions-puttweaks
-      Handler: lambda/puttweaks.handler
-      MemorySize: 128
-      Role: !GetAtt 'CommonRoleForLambda.Arn'
-      Runtime: nodejs20.x
-      Timeout: 29
-      Description: Saves tweaks to DynamoDB
-      Environment:
-        Variables:
-          DYNAMO_CONFIG_TABLE: !Ref 'ConfigDynamoDBTable'
-          REGION: !Ref 'AWS::Region'
-    DependsOn:
-      - PutTweaksLogGroup
-      - CommonRoleForLambda                            
-  PutTweaksLambdaVersion:
-    Type: AWS::Lambda::Version
-    DeletionPolicy: Retain
-    Properties:
-      FunctionName: !Ref 'PutTweaksLambdaFunction'
-      Description: Saves tweaks to DynamoDB
   PutLanguageLambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
@@ -2068,50 +2016,6 @@ Resources:
             - !GetAtt 'PutVocabularyLambdaFunction.Arn'
             - /invocations
       MethodResponses: []      
-  ApiGatewayMethodTweaksGet:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: GET
-      RequestParameters: {}
-      ResourceId: !Ref 'ApiGatewayResourceTweaks'
-      RestApiId: !Ref 'ApiGatewayRestApi'
-      ApiKeyRequired: true
-      AuthorizationType: NONE
-      Integration:
-        IntegrationHttpMethod: POST
-        Type: AWS_PROXY
-        Uri: !Join
-          - ''
-          - - 'arn:'
-            - !Ref 'AWS::Partition'
-            - ':apigateway:'
-            - !Ref 'AWS::Region'
-            - :lambda:path/2015-03-31/functions/
-            - !GetAtt 'GetTweaksLambdaFunction.Arn'
-            - /invocations
-      MethodResponses: []      
-  ApiGatewayMethodTweaksPut:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      HttpMethod: PUT
-      RequestParameters: {}
-      ResourceId: !Ref 'ApiGatewayResourceTweaks'
-      RestApiId: !Ref 'ApiGatewayRestApi'
-      ApiKeyRequired: true
-      AuthorizationType: NONE
-      Integration:
-        IntegrationHttpMethod: POST
-        Type: AWS_PROXY
-        Uri: !Join
-          - ''
-          - - 'arn:'
-            - !Ref 'AWS::Partition'
-            - ':apigateway:'
-            - !Ref 'AWS::Region'
-            - :lambda:path/2015-03-31/functions/
-            - !GetAtt 'PutTweaksLambdaFunction.Arn'
-            - /invocations
-      MethodResponses: []
   ApiGatewayMethodLanguagePut:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -2532,44 +2436,6 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       FunctionName: !GetAtt 'PutVocabularyLambdaFunction.Arn'
-      Action: lambda:InvokeFunction
-      Principal: !Join
-        - ''
-        - - apigateway.amazonaws.com
-      SourceArn: !Join
-        - ''
-        - - 'arn:'
-          - !Ref 'AWS::Partition'
-          - ':execute-api:'
-          - !Ref 'AWS::Region'
-          - ':'
-          - !Ref 'AWS::AccountId'
-          - ':'
-          - !Ref 'ApiGatewayRestApi'
-          - /*/*
-  GetTweaksLambdaPermissionApiGateway:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt 'GetTweaksLambdaFunction.Arn'
-      Action: lambda:InvokeFunction
-      Principal: !Join
-        - ''
-        - - apigateway.amazonaws.com
-      SourceArn: !Join
-        - ''
-        - - 'arn:'
-          - !Ref 'AWS::Partition'
-          - ':execute-api:'
-          - !Ref 'AWS::Region'
-          - ':'
-          - !Ref 'AWS::AccountId'
-          - ':'
-          - !Ref 'ApiGatewayRestApi'
-          - /*/*
-  PutTweaksLambdaPermissionApiGateway:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt 'PutTweaksLambdaFunction.Arn'
       Action: lambda:InvokeFunction
       Principal: !Join
         - ''
